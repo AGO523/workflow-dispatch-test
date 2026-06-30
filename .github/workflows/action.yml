@@ -1,38 +1,40 @@
-name: deploy
+  name: deploy
 
-on:
-  push:
-    branches:
-      - master
-      - staging
-      - develop
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'デプロイ先のテスト環境'
-        type: choice
-        required: true
-        options:
-          - develop
-          - edge
+  on:
+    push:
+      branches:
+        - master
+        - staging
+        - develop
+        - edge
+    workflow_dispatch:
+      inputs:
+        environment:
+          description: 'デプロイ先のテスト環境'
+          type: choice
+          required: true
+          options:
+            - develop
+            - edge
 
-jobs:
-  rspec:
-    runs-on: ubuntu-latest
-    steps:
-      - name: rspec (dummy)
-        run: echo "::notice::rspec ran / event=${{ github.event_name }} / ref=${{ github.ref_name }}"
+  jobs:
+    rspec:
+      runs-on: ubuntu-latest
+      steps:
+        - name: rspec (dummy)
+          run: echo "::notice::rspec ran / event=${{ github.event_name }} / ref=${{ github.ref_name }}"
 
-  deploy:
-    needs: [rspec]
-    runs-on: ubuntu-latest
-    environment: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.ref_name }}
-    if: github.event_name == 'workflow_dispatch' || github.ref_name == 'master' || github.ref_name == 'staging'
-    steps:
-      - name: deploy (dummy)
-        run: |
-          echo "::notice::deploy START"
-          echo "event_name           = ${{ github.event_name }}"
-          echo "ref_name             = ${{ github.ref_name }}"
-          echo "input.environment    = ${{ github.event.inputs.environment }}"
-          echo "resolved environment = ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.ref_name }}"
+    deploy:
+      needs: [rspec]
+      runs-on: ubuntu-latest
+      environment: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.ref_name }}
+      if: github.event_name == 'workflow_dispatch' || github.ref_name == 'master' || github.ref_name == 'staging'
+      steps:
+        - name: deploy (dummy)
+          run: |
+            echo "::notice::deploy START"
+            echo "event_name           = ${{ github.event_name }}"
+            echo "ref_name             = ${{ github.ref_name }}"
+            echo "input.environment    = ${{ github.event.inputs.environment }}"
+            echo "resolved environment = ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment ||
+  github.ref_name }}"
