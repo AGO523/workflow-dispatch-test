@@ -36,5 +36,4 @@
             echo "event_name           = ${{ github.event_name }}"
             echo "ref_name             = ${{ github.ref_name }}"
             echo "input.environment    = ${{ github.event.inputs.environment }}"
-            echo "resolved environment = ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment ||
-  github.ref_name }}"
+            echo "resolved environment = ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.ref_name }}"
